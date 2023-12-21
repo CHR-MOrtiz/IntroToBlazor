@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[Developer_Insert]
+﻿CREATE PROCEDURE [dbo].[Developers_Insert]
 
 	@FirstName nvarchar (50),
 	@LastName nvarchar(50),

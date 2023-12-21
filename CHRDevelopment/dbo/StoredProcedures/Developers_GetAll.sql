@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[Developer_GetAll]
+﻿CREATE PROCEDURE [dbo].[Developers_GetAll]
 
 AS
 	BEGIN
