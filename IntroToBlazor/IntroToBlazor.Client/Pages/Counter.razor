@@ -1,0 +1,22 @@
+﻿@page "/counter"
+@* Tells the runtime that it will run on the server first, then in the next run on the client. *@
+@rendermode InteractiveAuto
+
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+<p>This component is <strong>InteractiveAuto</strong> rendered. It renders on the server first, then on the client.</p>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

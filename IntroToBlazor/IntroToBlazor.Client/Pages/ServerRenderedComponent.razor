@@ -1,0 +1,24 @@
+﻿<h3>Server Rendered Component (Client)</h3>
+@rendermode InteractiveServer
+@inject IConfiguration serverConfig
+
+This component is <strong>Server Rendered</strong>.
+
+<p>@config</p>
+
+<button @onclick="UpdateMessage">Click me</button> @message
+
+@code {
+    private string? config = "";
+    private string message = "Not clicked yet.";
+
+    protected override void OnInitialized()
+    {
+        config = serverConfig.GetValue<string>("ServerConfiguration");
+    }
+
+    private void UpdateMessage()
+    {
+        message = "Somebody clicked me!";
+    }
+}

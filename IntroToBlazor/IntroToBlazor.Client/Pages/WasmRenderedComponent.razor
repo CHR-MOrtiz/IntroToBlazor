@@ -1,0 +1,24 @@
+﻿@rendermode InteractiveAuto
+@inject IConfiguration serverConfig
+
+<h3>Wasm-Rendered-Component (Client)</h3>
+This component is <strong>Web Assembly Rendered</strong>.
+
+<p>@config</p>
+
+<button @onclick="UpdateMessage">Click me</button> @message
+
+@code {
+    private string? config = "";
+    private string message = "Not clicked yet.";
+
+    protected override void OnInitialized()
+    {
+        config = serverConfig.GetValue<string>("ServerConfiguration");
+    }
+
+    private void UpdateMessage()
+    {
+        message = "Somebody clicked me!";
+    }
+}
