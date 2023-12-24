@@ -1,0 +1,103 @@
+﻿@inject HttpClient Http
+@rendermode InteractiveAuto
+@attribute [StreamRendering]
+
+<h3>Developers Child Component (Client)</h3>
+
+This child component is <strong>Auto Rendered</strong>.
+
+<h1>CHR Developers</h1>
+
+<p><a href="add-developer" class="btn btn-success">Add Developer</a></p>
+@if (IsSuccess)
+{
+    <div class="alert alert-success" role="alert">
+        Developer deleted successfully!
+    </div>
+}
+@if (IsFailure)
+{
+    <div class="alert alert-warning" role="alert">
+        A problem occured trying to delete developer!
+        @if (Message is not null)
+        {
+            <p>Reason : @Message</p>
+        }
+    </div>
+}
+
+@if(developers is null)
+{
+    <h3>Loading...</h3>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Title</th>
+                <th>City</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var developer in developers)
+            {
+                <tr>
+                    <td>@developer.FirstName</td>
+                    <td>@developer.LastName</td>
+                    <td>@developer.Title</td>
+                    <td>@developer.City</td>
+                    <td>
+                        <ul class="nav nav-pills">
+                            <li class="nav-item">
+                                <a class="btn btn-warning" aria-current="page" href="update-developer">Update</a>
+                            </li>
+                            &nbsp;
+                            <li class="nav-item">
+                                <a class="btn btn-danger" @onclick="(() => DeleteDeveloper(developer.Id))">Delete</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code{
+
+    [Parameter]
+    public bool IsSuccess{ get; set; }
+    [Parameter]
+    public bool IsFailure{ get; set; }
+    [Parameter]
+    public string? Message { get; set; }
+
+    List<DeveloperModel>? developers = null;
+
+
+    DeveloperModel developer = new();
+
+    protected override async Task OnInitializedAsync() => developers = await Http.GetFromJsonAsync<List<DeveloperModel>>("/developers");
+
+    private async Task DeleteDeveloper(int Id)
+    {
+        var result = await Http.DeleteAsync($"/developers/{Id}", CancellationToken.None);
+
+        if (result.IsSuccessStatusCode)
+        {
+            IsSuccess = true;
+            StateHasChanged();
+        }
+        else
+        {
+            IsFailure = true;
+            Message = $"{result.ReasonPhrase!}. Status Code: {result.StatusCode}";
+        }
+    }
+
+}

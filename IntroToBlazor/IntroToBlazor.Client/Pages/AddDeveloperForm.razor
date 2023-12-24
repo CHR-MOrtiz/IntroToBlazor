@@ -1,0 +1,67 @@
+﻿@page "/add-developer"
+@using System.Diagnostics
+@inject HttpClient Http;
+
+@rendermode InteractiveServer
+@*Form worked only on Server render*@
+<h3>Add Developer (Form)</h3>
+
+@if (IsSuccess)
+{
+    <div class="alert alert-success" role="alert">
+        Developer added successfully!
+    </div>
+}
+@if (IsFaliure)
+{
+    <div class="alert alert-warning" role="alert">
+       A problem occured trying to add developer!
+    </div>
+}
+
+@if (developer is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm Model="@developer" OnValidSubmit="@SubmitDeveloper" FormName="AddDeveloper">
+        <DataAnnotationsValidator />
+            <div class="mb-3">
+            <label for="FirstName" class="form-label">First Name</label>
+                <InputText @bind-Value="developer!.FirstName" type="text" class="form-control" id="add-firstname-input" placeholder="First Name"/>
+
+            <label for="LastName" class="form-label">Last Name</label>
+                <InputText @bind-Value="developer!.LastName" type="text" class="form-control" id="add-lastname-input" placeholder="Last Name"/>
+
+            <label for="Title" class="form-label">Title</label>
+                <InputText @bind-Value="developer!.Title" type="text" class="form-control" id="add-title-input" placeholder="Title"/>
+
+            <label for="City" class="form-label">City</label>
+                <InputText @bind-Value="developer!.City" type="text" class="form-control" id="add-city-input" placeholder="City"/>
+            </div>
+        <button type="submit" class="btn btn-primary">Add Developer</button>
+        <ValidationSummary />
+    </EditForm>
+}
+
+@code {
+    private bool IsSuccess, IsFaliure;
+
+    [SupplyParameterFromForm]
+    public DeveloperModel? developer { get; set; } = new();
+
+    private async Task SubmitDeveloper()
+    {
+        var result = await Http.PostAsJsonAsync<DeveloperModel>("/developers", developer!);
+
+        if (result.IsSuccessStatusCode)
+        {
+            IsSuccess = true;
+        }
+        else
+        {
+            IsFaliure = true;
+        }
+    }
+}

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CHRDevelopment.Api", "CHRDe
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "CHRDevelopment", "CHRDevelopment\CHRDevelopment.sqlproj", "{7DCB762B-1555-4AF2-8FE6-5FBD2834E66A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CHRDevelopment.DataAccess", "CHRDevelopment.DataAccess\CHRDevelopment.DataAccess.csproj", "{F2BEAF5B-2C35-496C-8F4C-15E69513E305}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CHRDevelopment.DataAccess", "CHRDevelopment.DataAccess\CHRDevelopment.DataAccess.csproj", "{F2BEAF5B-2C35-496C-8F4C-15E69513E305}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

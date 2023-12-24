@@ -14,7 +14,7 @@ public static class DevelopersEndpoints
         //Update developer
         app.MapPut("/developers", UpdateDeveloper);
         //Delete developer
-        app.MapDelete("/developers", DeleteDeveloper);
+        app.MapDelete("/developers/{id}", DeleteDeveloper);
     }
 
     private static async Task<IResult> GetDevelopers(IDevelopmentData developers)

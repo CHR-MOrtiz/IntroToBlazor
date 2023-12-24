@@ -10,6 +10,19 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddSingleton<IDevelopmentData, DevelopmentData>();
 
+
+//Cors Allow
+var MyAllowSpecificOrigin = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options => {
+    options.AddPolicy(MyAllowSpecificOrigin,
+    policy => {
+        policy.WithOrigins("https://localhost:7204","http://localhost:5204")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,6 +33,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+//Allow Cors
+
+app.UseCors(MyAllowSpecificOrigin);
+
 
 app.ConfigureDevelopersEndpoints();//Quarter back method (calls and arragins the plays)
 
