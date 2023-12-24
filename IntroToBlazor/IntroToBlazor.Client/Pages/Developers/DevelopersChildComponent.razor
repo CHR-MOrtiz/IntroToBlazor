@@ -1,5 +1,7 @@
 ﻿@inject HttpClient Http
-@rendermode InteractiveAuto
+
+@rendermode InteractiveServer
+
 @attribute [StreamRendering]
 
 <h3>Developers Child Component (Client)</h3>
@@ -9,7 +11,7 @@ This child component is <strong>Auto Rendered</strong>.
 <h1>CHR Developers</h1>
 
 <p><a href="add-developer" class="btn btn-success">Add Developer</a></p>
-@if (IsSuccess)
+@* @if (IsSuccess)
 {
     <div class="alert alert-success" role="alert">
         Developer deleted successfully!
@@ -24,14 +26,16 @@ This child component is <strong>Auto Rendered</strong>.
             <p>Reason : @Message</p>
         }
     </div>
-}
-
+} *@
+<DeleteDeveloperModal @ref ="deleteDeveloperDialog" />
 @if(developers is null)
 {
     <h3>Loading...</h3>
 }
 else
 {
+
+
     <table class="table">
         <thead>
             <tr>
@@ -58,7 +62,11 @@ else
                             </li>
                             &nbsp;
                             <li class="nav-item">
-                                <a class="btn btn-danger" @onclick="(() => DeleteDeveloper(developer.Id))">Delete</a>
+                                <a class="btn btn-danger" @onclick="(() => { if (deleteDeveloperDialog is not null )
+                                {
+                                    deleteDeveloperDialog.ShowModal(developer.Id);
+
+                                }  })" >Delete</a>
                             </li>
                         </ul>
                     </td>
@@ -70,34 +78,12 @@ else
 
 @code{
 
-    [Parameter]
-    public bool IsSuccess{ get; set; }
-    [Parameter]
-    public bool IsFailure{ get; set; }
-    [Parameter]
-    public string? Message { get; set; }
-
     List<DeveloperModel>? developers = null;
-
 
     DeveloperModel developer = new();
 
     protected override async Task OnInitializedAsync() => developers = await Http.GetFromJsonAsync<List<DeveloperModel>>("/developers");
 
-    private async Task DeleteDeveloper(int Id)
-    {
-        var result = await Http.DeleteAsync($"/developers/{Id}", CancellationToken.None);
-
-        if (result.IsSuccessStatusCode)
-        {
-            IsSuccess = true;
-            StateHasChanged();
-        }
-        else
-        {
-            IsFailure = true;
-            Message = $"{result.ReasonPhrase!}. Status Code: {result.StatusCode}";
-        }
-    }
+    private DeleteDeveloperModal? deleteDeveloperDialog;
 
 }

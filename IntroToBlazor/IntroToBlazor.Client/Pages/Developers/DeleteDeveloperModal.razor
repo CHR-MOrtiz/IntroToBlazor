@@ -1,0 +1,77 @@
+﻿
+@inject HttpClient Http
+@rendermode InteractiveAuto
+
+@if (display)
+{
+    <div class="bulma">
+        <div class="modal is-active">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Confirm Delete Developer</p>
+                    <button class="delete" aria-label="close" @onclick="(() => { this.CloseModal(); })"></button>
+                </header>
+                <section class="modal-card-body">
+                    Are you sure you want to delete developer?
+                </section>
+                <footer class="modal-card-foot">
+
+                    <button class="button is-dark" @onclick="(() => { this.CloseModal(); })"> Cancel </button>
+
+                    <button class="button is-danger" @onclick="(async() => {if(Id is not 0 or null){ await DeleteDeveloperAsync(); }})">Confirm</button>
+
+                </footer>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    private bool display;
+
+    public DeleteDeveloperModal() { }
+
+    public DeleteDeveloperModal(int id) => Id = id;
+
+    public int? Id { get; set; }
+
+    public bool IsSuccess { get; set; }
+
+    public bool IsFailure { get; set; }
+
+    public string? Message { get; set; }
+
+    public void ShowModal(int id)
+    {
+        Id = id;
+        display = true;
+        StateHasChanged();//Rerender
+    }
+
+    public void CloseModal()
+    {
+        display = false;
+        StateHasChanged();//Rerender
+    }
+    //Components can have methods
+
+    private async Task DeleteDeveloperAsync()
+    {
+        var result = await Http.DeleteAsync($"/developers/{this.Id}", CancellationToken.None);
+
+        if (result.IsSuccessStatusCode)
+        {
+            IsSuccess = true;
+            StateHasChanged();
+        }
+        else
+        {
+            IsFailure = true;
+            Message = $"{result.ReasonPhrase!}. Status Code: {result.StatusCode}";
+            StateHasChanged();//Rerender
+        }
+        this.CloseModal();
+    }
+}

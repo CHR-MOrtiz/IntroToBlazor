@@ -1,5 +1,6 @@
 ﻿@page "/add-developer"
 @using System.Diagnostics
+
 @inject HttpClient Http;
 
 @rendermode InteractiveServer
@@ -40,12 +41,16 @@ else
             <label for="City" class="form-label">City</label>
                 <InputText @bind-Value="developer!.City" type="text" class="form-control" id="add-city-input" placeholder="City"/>
             </div>
-        <button type="submit" class="btn btn-primary">Add Developer</button>
+        <button type="submit" class="btn btn-success">Add Developer</button>
         <ValidationSummary />
     </EditForm>
 }
 
+<BackLink />
+
 @code {
+   
+
     private bool IsSuccess, IsFaliure;
 
     [SupplyParameterFromForm]
