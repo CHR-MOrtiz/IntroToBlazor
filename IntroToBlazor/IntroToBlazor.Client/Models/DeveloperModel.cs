@@ -5,7 +5,7 @@ namespace IntroToBlazor.Client.Models;
 
 public class DeveloperModel()
 {
-    public int Id { get; set; } = default(int);
+    public int? Id { get; set; } = default(int);
 
     [Required]
     [StringLength(50, ErrorMessage ="First Name too long(50 charcter limit")]

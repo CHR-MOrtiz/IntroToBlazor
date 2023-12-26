@@ -12,9 +12,9 @@ This child component is <strong>Auto Rendered</strong>.
 <h1>CHR Developers</h1>
 
 <p><a href="add-developer?uri=@BackUrl" class="btn btn-success">Add Developer</a></p>
-<CascadingValue Value="this">
-    <DeleteDeveloperModal OnSuccessfulDeletion="SuccessfulDeletion" @ref="deleteDeveloperDialog" />
-</CascadingValue>
+
+<DeleteDeveloperModal OnSuccessfulDeletion="SuccessfulDeletion" @ref="deleteDeveloperDialog" />
+
 @if(developers is null)
 {
     <h3>Loading...</h3>
@@ -84,11 +84,7 @@ else
 
         AlertType = AlertTypeEnum.info;
         AlertMessage = "State has changed?";
-    }
-
-    public void RefreshState()
-    {
-        this.StateHasChanged();
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()

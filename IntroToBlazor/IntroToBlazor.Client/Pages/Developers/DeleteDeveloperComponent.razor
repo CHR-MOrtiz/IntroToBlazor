@@ -1,5 +1,105 @@
-﻿<h3>DeleteDeveloperComponent</h3>
+﻿
+@inject HttpClient Http
+@rendermode InteractiveAuto
 
+<div class="bulma">
+    <div class="modal is-active">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+
+                @if (IsSuccess)
+                {
+                    <p class="modal-card-title"><strong>@Developer!.FirstName @Developer.LastName</strong> Deleted!</p>
+                }
+                else
+                {
+                    <p class="modal-card-title"> Delete <strong>@Developer!.FirstName @Developer.LastName</strong></p>
+                }
+
+                <button class="delete" aria-label="close" @onclick="(
+                        () => { this.CloseModal(); })"></button>
+            </header>
+            <section class="modal-card-body">
+                @if (!IsSuccess)
+                {
+                    <p>Are you sure you want to delete this developer?</p>
+                }
+                <Alert AlertType="@AlertType" AlertMessage="@AlertMessage" />
+            </section>
+            <footer class="modal-card-foot">
+
+                <button class="button is-dark" @onclick="(
+                        () => { this.CloseModal(); })">
+
+                    @if (IsSuccess)
+                    {
+                        <span>Close</span>
+                    }
+                    else
+                    {
+                        <span>Cancel</span>
+                    }
+
+                </button>
+
+                @if (!IsSuccess)
+                {
+                    <button class="button is-danger" @onclick="
+                        (async() =>
+                        {if(Developer.Id is not 0 or null)
+                            {
+                                await DeleteDeveloperAsync();
+                            }
+                        })">
+                        Confirm
+                    </button>
+                }
+
+            </footer>
+        </div>
+    </div>
+</div>
 @code {
 
+    [Parameter]
+    public DeveloperModel? Developer { get; set; }
+
+    [Parameter]
+    public AlertTypeEnum AlertType { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnSuccessfulDeletion { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> CloseModalCallback { get; set; }
+
+    public bool IsSuccess { get; set; }
+
+    public string? AlertMessage { get; set; }
+
+    public void CloseModal()
+    {
+        CloseModalCallback.InvokeAsync(true);
+    }
+
+    private async Task DeleteDeveloperAsync()
+    {
+        var result = await Http.DeleteAsync($"/developers/{Developer!.Id}", CancellationToken.None);
+
+        if (result.IsSuccessStatusCode)
+        {
+            AlertType = AlertTypeEnum.success;
+            AlertMessage = $"{Developer!.FirstName} {Developer.LastName} deleted successfully!";
+
+            IsSuccess = result.IsSuccessStatusCode;
+
+            await OnSuccessfulDeletion.InvokeAsync(IsSuccess);
+        }
+        else
+        {
+            AlertType = AlertTypeEnum.warning;
+            AlertMessage = $"{result.ReasonPhrase!}. Status Code: {result.StatusCode}";
+        }
+    }
 }
