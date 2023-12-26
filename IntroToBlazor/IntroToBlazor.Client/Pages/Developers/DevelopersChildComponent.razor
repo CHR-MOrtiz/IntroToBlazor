@@ -13,7 +13,7 @@ This child component is <strong>Auto Rendered</strong>.
 
 <p><a href="add-developer?uri=@BackUrl" class="btn btn-success">Add Developer</a></p>
 
-<DeleteDeveloperModal OnSuccessfulDeletion="SuccessfulDeletion" @ref="deleteDeveloperDialog" />
+<DeleteDeveloperModal OnSuccessfulDeletion="SuccessfulDeletionAsync" @ref="deleteDeveloperDialog" />
 
 @if(developers is null)
 {
@@ -45,7 +45,12 @@ else
                     <td>
                         <ul class="nav nav-pills">
                             <li class="nav-item">
-                                <a class="btn btn-warning" aria-current="page" href="update-developer">Update</a>
+                                 <button class="btn btn-warning" aria-current="page" @onclick="(() => {
+                                     if (developer is not null )
+                                    {
+                                        NavigatToUpdatePage(developer);
+
+                                   }})" >Update</button>
                             </li>
                             &nbsp;
                             <li class="nav-item">
@@ -53,7 +58,7 @@ else
                                 {
                                     deleteDeveloperDialog.DeveloperDeleteModal(developer);
 
-                                   }  })" >Delete</a>
+                                }})" >Delete</a>
                             </li>
                         </ul>
                     </td>
@@ -65,34 +70,35 @@ else
 
 @code{
 
+    private DeleteDeveloperModal? deleteDeveloperDialog;
+
+    private List<DeveloperModel>? developers;
+
+    [Parameter]
+    public DeveloperModel? Developer { get; set; }
+
     [Parameter]
     public string? BackUrl { get; set; }
-
-    List<DeveloperModel>? developers = null;
-
-    DeveloperModel developer = new();
-
-    public bool IsSuccess { get; set; }
 
     public AlertTypeEnum AlertType { get; set; }
 
     public string? AlertMessage { get; set; }
 
-    protected async Task SuccessfulDeletion()
-    {
-        await Task.Run(() => { IsSuccess = true; });
-
-        AlertType = AlertTypeEnum.info;
-        AlertMessage = "State has changed?";
-        StateHasChanged();
-    }
-
     protected override async Task OnInitializedAsync()
     {
-        developers = await Http.GetFromJsonAsync<List<DeveloperModel>>("/developers");
+        developers = await GetDevelopersAsync();
 
         BackUrl = NavigationManager.Uri.ToString();
     }
 
-    private DeleteDeveloperModal? deleteDeveloperDialog;
+    private async Task<List<DeveloperModel>?> GetDevelopersAsync()
+        => await Http.GetFromJsonAsync<List<DeveloperModel>>("/developers");
+
+    protected async Task SuccessfulDeletionAsync() => developers = await GetDevelopersAsync();
+
+    private void NavigatToUpdatePage(DeveloperModel developer)
+    {
+        Developer = developer;
+        NavigationManager.NavigateTo($"/update-developer/{Developer.Id}?uri={BackUrl}", true);
+    }
 }

@@ -1,8 +1,109 @@
-﻿@page "/update-developer"
+﻿@page "/update-developer/{id}"
 
-<h3>Update Developer</h3>
+@using IntroToBlazor.Client.Enums
+
+@inject NavigationManager NavManager
+@inject HttpClient Http;
+
+@rendermode InteractiveServer
+@*Form worked only on Server render*@
+
+    <h3>Update Developer (Form)</h3>
+
+    <Alert AlertMessage="@AlertMessage" AlertType="@AlertType" />
+
+    @if (Developer is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <EditForm Model
+        ="@Developer" OnValidSubmit
+        ="@SubmitUpdateDeveloper" FormName
+        ="UpdateDeveloper">
+            <DataAnnotationsValidator />
+            <div class="mb-3">
+                <label for="FirstName" class="form-label">First Name</label>
+                <InputText @bind-Value="Developer!.FirstName" type="text" class="form-control" id="add-firstname-input" placeholder="First Name" />
+
+                <label for="LastName" class="form-label">Last Name</label>
+                <InputText @bind-Value="Developer!.LastName" type="text" class="form-control" id="add-lastname-input" placeholder="Last Name" />
+
+                <label for="Title" class="form-label">Title</label>
+                <InputText @bind-Value="Developer!.Title" type="text" class="form-control" id="add-title-input" placeholder="Title" />
+
+                <label for="City" class="form-label">City</label>
+                <InputText @bind-Value="Developer!.City" type="text" class="form-control" id="add-city-input" placeholder="City" />
+            </div>
+
+            <ul class="nav nav-pills">
+                @if (updated)
+                {
+                    <li class="nav-item">
+                        <a class="btn btn-secondary" href="@BackUrl">Back</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <button type="submit" class="btn btn-success">Update Developer</button>
+                    </li>
+                    <li>&nbsp;</li>
+                    <li class="nav-item">
+                    <a class="btn btn-secondary" href="@BackUrl">Cancel</a>
+                    </li>
+                }
+            </ul>
+
+            <ValidationSummary />
+        </EditForm>
+    }
+
+<BackLink BackUrl="@BackUrl" />
 
 @code {
 
-   
+    private bool display, updated;
+
+    [Parameter]
+    public string? Id { get; set; }
+
+    [Parameter]
+    public string? AlertMessage { get; set; }
+
+    [Parameter]
+    public AlertTypeEnum? AlertType { get; set; }
+
+    [Parameter]
+    public string? BackUrl { get; set; }
+
+    public DeveloperModel? Developer { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Developer = await Http.GetFromJsonAsync<DeveloperModel>($"/developers/{Id}");
+
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+
+        BackUrl = StringQueryParser.ParseQueryString(uri, "uri");
+    }
+
+    private async Task SubmitUpdateDeveloper()
+    {
+        var result = await Http.PutAsJsonAsync<DeveloperModel>("/developers", Developer!);
+
+        if (result.IsSuccessStatusCode)
+        {
+            AlertMessage = $"{Developer!.FirstName} {Developer.LastName} updated successfully!";
+            AlertType = AlertTypeEnum.success;
+            updated = result.IsSuccessStatusCode;
+        }
+        else
+        {
+            AlertMessage = $"A problem occured trying to updating developer! (Reason: {result.ReasonPhrase})";
+            AlertType = AlertTypeEnum.warning;
+        }
+        StateHasChanged();
+    }
 }

@@ -31,7 +31,25 @@ else
             <label for="City" class="form-label">City</label>
                 <InputText @bind-Value="developer!.City" type="text" class="form-control" id="add-city-input" placeholder="City"/>
             </div>
-        <button type="submit" class="btn btn-success">Add Developer</button>
+            <ul class="nav nav-pills">
+
+            @if (SetAddAnother)
+            {
+                <li class="nav-item">
+                    <button type="button" class="btn btn-info" @onclick="(() => AddAnotherDeveloper())">Add Another Developer</button>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item">
+                    <button type="submit" class="btn btn-success">Add Developer</button>
+                </li>
+            }
+                &nbsp;
+                <li class="nav-item">
+                    <a class="btn btn-secondary" href="@BackUrl">Cancel</a>
+                </li>
+            </ul>
         <ValidationSummary />
     </EditForm>
 }
@@ -40,18 +58,16 @@ else
 
 @code {
 
-
-
     [Parameter]
     public string? AlertMessage { get; set; }
 
+    public bool SetAddAnother { get; set; }
+
     [Parameter]
-    public AlertTypeEnum AlertType { get; set; }
+    public AlertTypeEnum? AlertType { get; set; }
 
     [SupplyParameterFromForm]
     public DeveloperModel? developer { get; set; } = new();
-
-
 
     [Parameter]
     public string? BackUrl { get; set; }
@@ -72,13 +88,21 @@ else
         if (result.IsSuccessStatusCode)
         {
 
-            AlertMessage = "Developer added successfully!";
+            AlertMessage = $"{developer!.FirstName} {developer.LastName} added successfully!";
             AlertType = AlertTypeEnum.success;
+            SetAddAnother = result.IsSuccessStatusCode;
         }
         else
         {
             AlertMessage = $"A problem occured trying to add developer! (Reason: {result.ReasonPhrase})";
             AlertType = AlertTypeEnum.warning;
         }
+    }
+
+    private void AddAnotherDeveloper()
+    {
+        SetAddAnother = false;
+      
+        NavManager.NavigateTo(NavManager.Uri, true);
     }
 }

@@ -1,18 +1,12 @@
 ﻿
-
-
 @if (display)
 {
-    <DeleteDeveloperComponent Developer="@Developer" CloseModalCallback="CloseModal" OnSuccessfulDeletion="SuccessfulDeletion"></DeleteDeveloperComponent>
+    <DeleteDeveloperComponent Developer="@Developer" CloseModalCallback="CloseModal" OnSuccessfulDeletion="SuccessfulDeletionAsync"></DeleteDeveloperComponent>
 }
 
 @code {
 
     private bool display;
-
-    public DeleteDeveloperModal() { }
-
-    public DeleteDeveloperModal(int id) => Id = id;
 
     [Parameter]
     public EventCallback<bool> OnSuccessfulDeletion { get; set; }
@@ -20,22 +14,14 @@
     [Parameter]
     public DeveloperModel? Developer { get; set; }
 
-    public int? Id { get; set; }
-
     public void DeveloperDeleteModal(DeveloperModel developer)
     {
         Developer = developer;
-        Id = developer.Id;
         display = true;
         StateHasChanged();
     }
 
     public void CloseModal() => display = false;
 
-    protected async Task SuccessfulDeletion()
-    {
-        await Task.Run(() => {  });
-
-        await OnSuccessfulDeletion.InvokeAsync();
-    }
+    protected async Task SuccessfulDeletionAsync() => await OnSuccessfulDeletion.InvokeAsync();
 }

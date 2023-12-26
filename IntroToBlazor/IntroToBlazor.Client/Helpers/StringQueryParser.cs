@@ -19,6 +19,6 @@ public static class StringQueryParser
             throw;
         }
 
-        return default(string)!;
+        return default!;
     }
 }

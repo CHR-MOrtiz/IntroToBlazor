@@ -1,6 +1,5 @@
 ﻿
 @inject HttpClient Http
-@rendermode InteractiveAuto
 
 <div class="bulma">
     <div class="modal is-active">
@@ -81,6 +80,11 @@
     public void CloseModal()
     {
         CloseModalCallback.InvokeAsync(true);
+
+        if (IsSuccess)
+        {
+            OnSuccessfulDeletion.InvokeAsync();
+        }
     }
 
     private async Task DeleteDeveloperAsync()
@@ -93,8 +97,6 @@
             AlertMessage = $"{Developer!.FirstName} {Developer.LastName} deleted successfully!";
 
             IsSuccess = result.IsSuccessStatusCode;
-
-            await OnSuccessfulDeletion.InvokeAsync(IsSuccess);
         }
         else
         {
