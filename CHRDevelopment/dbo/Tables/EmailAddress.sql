@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[EmailAddress]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	[DeveloperID] INT NOT NULL,
+	[Email] VARCHAR(255) NULL,
+	CONSTRAINT FK_Developer FOREIGN KEY (Id) REFERENCES [Developers]
+);
