@@ -1,0 +1,17 @@
+﻿@using IntroToBlazor.Client.Enums;
+
+@if (AlertType is not null && !string.IsNullOrEmpty(AlertMessage))
+{
+    <div class="alert alert-@AlertType.ToString()" role="alert">
+        @AlertMessage
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string? AlertMessage { get; set; }
+
+    [Parameter]
+    public AlertTypeEnum? AlertType { get; set; }
+}

@@ -1,24 +1,14 @@
 ﻿@page "/add-developer"
-@using System.Diagnostics
+@using IntroToBlazor.Client.Enums
 
+@inject NavigationManager NavManager
 @inject HttpClient Http;
 
 @rendermode InteractiveServer
 @*Form worked only on Server render*@
 <h3>Add Developer (Form)</h3>
 
-@if (IsSuccess)
-{
-    <div class="alert alert-success" role="alert">
-        Developer added successfully!
-    </div>
-}
-@if (IsFaliure)
-{
-    <div class="alert alert-warning" role="alert">
-       A problem occured trying to add developer!
-    </div>
-}
+<Alert AlertMessage ="@AlertMessage" AlertType="@AlertType"/>
 
 @if (developer is null)
 {
@@ -46,15 +36,34 @@ else
     </EditForm>
 }
 
-<BackLink />
+    <BackLink BackUrl="@BackUrl" />
 
 @code {
-   
 
-    private bool IsSuccess, IsFaliure;
+
+
+    [Parameter]
+    public string? AlertMessage { get; set; }
+
+    [Parameter]
+    public AlertTypeEnum AlertType { get; set; }
 
     [SupplyParameterFromForm]
     public DeveloperModel? developer { get; set; } = new();
+
+
+
+    [Parameter]
+    public string? BackUrl { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+
+        BackUrl = StringQueryParser.ParseQueryString(uri, "uri");
+
+        return base.OnInitializedAsync();
+    }
 
     private async Task SubmitDeveloper()
     {
@@ -62,11 +71,14 @@ else
 
         if (result.IsSuccessStatusCode)
         {
-            IsSuccess = true;
+
+            AlertMessage = "Developer added successfully!";
+            AlertType = AlertTypeEnum.success;
         }
         else
         {
-            IsFaliure = true;
+            AlertMessage = $"A problem occured trying to add developer! (Reason: {result.ReasonPhrase})";
+            AlertType = AlertTypeEnum.warning;
         }
     }
 }

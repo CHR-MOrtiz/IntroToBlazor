@@ -1,4 +1,5 @@
 ﻿
+
 @inject HttpClient Http
 @rendermode InteractiveAuto
 
@@ -9,17 +10,52 @@
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">Confirm Delete Developer</p>
-                    <button class="delete" aria-label="close" @onclick="(() => { this.CloseModal(); })"></button>
+
+                    @if (IsSuccess)
+                    {
+                        <p class="modal-card-title"><strong>@Developer!.FirstName @Developer.LastName</strong> Deleted!</p>
+                    }
+                    else
+                    {
+                        <p class="modal-card-title"> Delete <strong>@Developer!.FirstName @Developer.LastName</strong></p>
+                    }
+
+                    <button class="delete" aria-label="close" @onclick="(
+                        () => { this.CloseModal(); })"></button>
                 </header>
                 <section class="modal-card-body">
-                    Are you sure you want to delete developer?
+                   @if (!IsSuccess)
+                    {
+                        <p>Are you sure you want to delete this developer?</p>
+                    }
+                    <Alert AlertType="@AlertType" AlertMessage="@AlertMessage" />
                 </section>
                 <footer class="modal-card-foot">
 
-                    <button class="button is-dark" @onclick="(() => { this.CloseModal(); })"> Cancel </button>
+                    <button class="button is-dark" @onclick="(
+                        () => { this.CloseModal(); })">
 
-                    <button class="button is-danger" @onclick="(async() => {if(Id is not 0 or null){ await DeleteDeveloperAsync(); }})">Confirm</button>
+                        @if (IsSuccess)
+                        {
+                           <span>Close</span>
+                        }
+                        else
+                        {
+                           <span>Cancel</span>
+                        }
+
+                    </button>
+
+                    @if (!IsSuccess)
+                    {
+                        <button class="button is-danger" @onclick="
+                        (async() =>
+                        {if(Id is not 0 or null)
+                            {
+                                await DeleteDeveloperAsync();
+                            }
+                        })">Confirm</button>
+                    }
 
                 </footer>
             </div>
@@ -35,27 +71,32 @@
 
     public DeleteDeveloperModal(int id) => Id = id;
 
+    public DeveloperModel? Developer { get; set; }
+
     public int? Id { get; set; }
+
+    [Parameter]
+    public AlertTypeEnum AlertType { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnSuccessfulDeletion { get; set; }
+
+    [CascadingParameter]
+    public DevelopersChildComponent Grid { get; set; }
 
     public bool IsSuccess { get; set; }
 
-    public bool IsFailure { get; set; }
+    public string? AlertMessage { get; set; }
 
-    public string? Message { get; set; }
-
-    public void ShowModal(int id)
+    public void DeveloperDeleteModal(DeveloperModel developer)
     {
-        Id = id;
+        Developer = developer;
+        Id = developer.Id;
         display = true;
-        StateHasChanged();//Rerender
+        StateHasChanged();
     }
 
-    public void CloseModal()
-    {
-        display = false;
-        StateHasChanged();//Rerender
-    }
-    //Components can have methods
+    public void CloseModal() => display = false;
 
     private async Task DeleteDeveloperAsync()
     {
@@ -63,15 +104,19 @@
 
         if (result.IsSuccessStatusCode)
         {
-            IsSuccess = true;
-            StateHasChanged();
+            AlertType = AlertTypeEnum.success;
+            AlertMessage = $"{Developer!.FirstName} { Developer.LastName} deleted successfully!";
+
+            IsSuccess = result.IsSuccessStatusCode;
+
+            Grid.RefreshState();
+
+            await OnSuccessfulDeletion.InvokeAsync(IsSuccess);
         }
         else
         {
-            IsFailure = true;
-            Message = $"{result.ReasonPhrase!}. Status Code: {result.StatusCode}";
-            StateHasChanged();//Rerender
+            AlertType = AlertTypeEnum.warning;
+            AlertMessage = $"{result.ReasonPhrase!}. Status Code: {result.StatusCode}";
         }
-        this.CloseModal();
     }
 }

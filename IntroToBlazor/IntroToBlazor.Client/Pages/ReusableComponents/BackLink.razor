@@ -7,12 +7,12 @@
             <a class="nav-link" href="#">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="@CurrentUrl">Back</a>
+            <a class="nav-link" href="@BackUrl">Back</a>
         </li>
     </ul>
 </section>
 
 @code {
     [Parameter]
-    public string? CurrentUrl { get; set; }
+    public string? BackUrl { get; set; }
 }
