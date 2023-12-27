@@ -1,3 +1,4 @@
+using CHRDevelopment.Api.Endpoints.Emails;
 using CHRDevelopment.Api.EndPoints.CHRDevelopers;
 using CHRDevelopment.DataAccess.DataAccess;
 
@@ -9,7 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddSingleton<IDevelopmentData, DevelopmentData>();
-
+builder.Services.AddSingleton<IEmailData, EmailData>();
 
 //Cors Allow
 var MyAllowSpecificOrigin = "_myAllowSpecificOrigins";
@@ -35,10 +36,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 //Allow Cors
-
 app.UseCors(MyAllowSpecificOrigin);
 
-
 app.ConfigureDevelopersEndpoints();//Quarter back method (calls and arragins the plays)
+
+app.ConfigureEmailsEndpoints();
 
 app.Run();

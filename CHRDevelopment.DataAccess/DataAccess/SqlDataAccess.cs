@@ -10,14 +10,33 @@ public class SqlDataAccess(IConfiguration config) : ISqlDataAccess
 {
     private readonly IConfiguration _config = config;
 
-    public async Task<IEnumerable<T>> LoadDataAsync<T, U>(string storedProcedures, U parameters, string connectionId = "Default")
+    //CQRS (Command Query Responsibilty Separation)
+
+    /// <summary>
+    /// Loads data from DB
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="U"></typeparam>
+    /// <param name="storedProcedures"></param>
+    /// <param name="parameters"></param>
+    /// <param name="connectionId"></param>
+    /// <returns>Results of type<typeparamref name="T"/></returns>
+    public async Task<IEnumerable<T>> QueryDataAsync<T, U>(string storedProcedures, U parameters, string connectionId = "Default")
     {
         using IDbConnection connection = new SqlConnection(_config.GetConnectionString(connectionId));
 
         return await connection.QueryAsync<T>(storedProcedures, parameters, commandType: CommandType.StoredProcedure);
     }
 
-    public async Task SaveDataAsync<T>(string storedProcedures, T parameters, string connectionId = "Default")
+    /// <summary>
+    /// Saves data to DB
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="storedProcedures"></param>
+    /// <param name="parameters"></param>
+    /// <param name="connectionId"></param>
+    /// <returns></returns>
+    public async Task CommandDataAsync<T>(string storedProcedures, T parameters, string connectionId = "Default")
     {
         using IDbConnection connection = new SqlConnection(_config.GetConnectionString(connectionId));
 

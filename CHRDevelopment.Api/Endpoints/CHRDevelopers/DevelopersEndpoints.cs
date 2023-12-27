@@ -66,6 +66,7 @@ public static class DevelopersEndpoints
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0054:Use compound assignment", Justification = "<Pending>")]
     private static async Task<IResult> UpdateDeveloper(DeveloperModel developer, IDevelopmentData developers)
     {
         try
@@ -75,9 +76,9 @@ public static class DevelopersEndpoints
             if (exists is null) return Results.NotFound("Developer not found.");
 
             developer.FirstName = developer.FirstName ?? exists.FirstName;
-            developer.LastName = developer.LastName ?? exists.LastName;
-            developer.Title = developer.Title ?? exists.Title;
-            developer.City = developer.City ?? exists.City;
+            developer.LastName ??= exists.LastName;
+            developer.Title ??= exists.Title;
+            developer.City ??= exists.City;
 
             await developers.UpdateDeveloper(developer);
 

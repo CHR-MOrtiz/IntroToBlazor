@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[Developers_GetById]
-	@Id int
+	@Id INT
 AS
 	BEGIN
-		select Id, FirstName, LastName, Title, City from dbo.Developers
-		where Id =@Id;
+		SELECT Id, FirstName, LastName, Title, City FROM dbo.Developers
+		WHERE Id =@Id;
 	END

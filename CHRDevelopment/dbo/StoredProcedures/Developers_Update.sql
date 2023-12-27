@@ -1,12 +1,12 @@
 ﻿CREATE PROCEDURE [dbo].[Developers_Update]
-	@Id int,
-	@FirstName nvarchar (50),
-	@LastName nvarchar(50),
-	@Title nvarchar(50),
-	@City nvarchar(50)
+	@Id INT,
+	@FirstName NVARCHAR (50),
+	@LastName NVARCHAR(50),
+	@Title NVARCHAR(50),
+	@City NVARCHAR(50)
 AS
 	BEGIN
-		update dbo.Developers
-		set FirstName = @FirstName, LastName = @LastName, Title = @Title, City = @City
-		where Id = @Id;
+		UPDATE dbo.Developers
+		SET FirstName = @FirstName, LastName = @LastName, Title = @Title, City = @City
+		WHERE Id = @Id;
 	END

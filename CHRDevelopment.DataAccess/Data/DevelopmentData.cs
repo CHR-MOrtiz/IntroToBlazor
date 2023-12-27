@@ -9,17 +9,20 @@ public class DevelopmentData(ISqlDataAccess db) : IDevelopmentData
 
     //Pull from DB
     public async Task<IEnumerable<DeveloperModel>> GetDevelopers()
-        => await _db.LoadDataAsync<DeveloperModel, dynamic>("dbo.Developers_GetAll", new { });
+        => await _db.QueryDataAsync<DeveloperModel, dynamic>("dbo.Developers_GetAll", new { });
 
     public async Task<DeveloperModel?> GetDeveloper(int? id)
-        => (await _db.LoadDataAsync<DeveloperModel?, dynamic>("dbo.Developers_GetById", new { Id = id })).FirstOrDefault();
+        => (await _db.QueryDataAsync<DeveloperModel?, dynamic>("dbo.Developers_GetById", new { Id = id })).FirstOrDefault();
     //Push to DB
     public async Task InsertDeveloper(DeveloperModel developer)
-        => await _db.SaveDataAsync("dbo.Developers_Insert", new { developer.FirstName, developer.LastName, developer.Title, developer.City });
+        => await _db.CommandDataAsync("dbo.Developers_Insert", new { developer.FirstName, developer.LastName, developer.Title, developer.City });
 
     public async Task UpdateDeveloper(DeveloperModel developer)
-        => await _db.SaveDataAsync("dbo.Developers_Update", developer);
+        => await _db.CommandDataAsync("dbo.Developers_Update", developer);
+
+    public async Task ActivateDeactiveDeveloper(int? id)
+       => await _db.CommandDataAsync("dbo.Developers_Activate_Deactivate", new { Id = id });
 
     public async Task DeleteDeveloper(int? id)
-        => await _db.SaveDataAsync("dbo.Developers_Delete", new { Id = id });
+        => await _db.CommandDataAsync("dbo.Developers_Delete", new { Id = id });
 }

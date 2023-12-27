@@ -61,6 +61,8 @@
     <Folder Include="dbo\StoredProcedures" />
     <Folder Include="SQLQueries" />
     <Folder Include="dbo\Functions" />
+    <Folder Include="dbo\Views" />
+    <Folder Include="dbo\StoredProcedures\EmailsProcedures" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Developers.sql" />
@@ -71,8 +73,12 @@
     <Build Include="dbo\StoredProcedures\Developers_Update.sql" />
     <Build Include="dbo\Tables\EmailAddress.sql" />
     <Build Include="dbo\StoredProcedures\Developers_Activate_Deactivate.sql" />
-    <Build Include="dbo\StoredProcedures\Developers_UpdateEmail.sql" />
     <Build Include="dbo\Functions\Validate_EmailPattern.sql" />
+    <Build Include="dbo\Views\Developers_WithNoEmails.sql" />
+    <Build Include="dbo\StoredProcedures\EmailsProcedures\Developers_UpdateEmail.sql" />
+    <Build Include="dbo\StoredProcedures\EmailsProcedures\Developers_GetAllEmails.sql" />
+    <Build Include="dbo\StoredProcedures\EmailsProcedures\Developers_GetEmailByDeveloperId.sql" />
+    <Build Include="dbo\Views\Developers_FullInformation.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment1.sql" />

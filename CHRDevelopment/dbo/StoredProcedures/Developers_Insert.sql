@@ -8,7 +8,7 @@ AS
 	BEGIN
 		DECLARE @initialCount int = (SELECT COUNT(*) FROM dbo.Developers)
 		INSERT INTO dbo.Developers(FirstName, LastName, Title, City, IsActive)
-		VALUES( @FirstName, @LastName, @Title, @City, 0);
+		VALUES(TRIM(@FirstName), TRIM(@LastName), TRIM(@Title), TRIM(@City), 0);
 	END
 
 	IF(@initialCount < (SELECT COUNT(*) FROM dbo.Developers))

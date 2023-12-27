@@ -4,6 +4,7 @@ namespace CHRDevelopment.DataAccess.Data
 {
     public interface IDevelopmentData
     {
+        Task ActivateDeactiveDeveloper(int? id);
         Task DeleteDeveloper(int? id);
         Task<DeveloperModel?> GetDeveloper(int? id);
         Task<IEnumerable<DeveloperModel>> GetDevelopers();

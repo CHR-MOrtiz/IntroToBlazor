@@ -6,7 +6,7 @@ BEGIN
 		('Dennis', 'Winkley', 'Senior Developer', 'Souix Fall', 1),
 		('Cassidy', 'Hodgin', 'Senior Developer', 'Souix Fall', 1),
 		('Ron', 'Vander Wal', 'Senior Developer', 'Souix Fall', 1),
-		('Ryan', 'Quasney', ' DevOps', 'Rapid City', 1),
+		('Ryan', 'Quasney', 'DevOps', 'Rapid City', 1),
 		('Gian', 'Villaronte', 'Junior Developer', 'Calabarzon', 1),
 		('Mateo', 'Ortiz', 'Developer', 'Orlando', 1);
 END

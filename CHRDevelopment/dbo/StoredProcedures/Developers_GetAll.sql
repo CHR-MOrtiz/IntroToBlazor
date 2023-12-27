@@ -2,5 +2,5 @@
 
 AS
 	BEGIN
-		select Id, FirstName, LastName, Title, City from dbo.Developers;
+		SELECT Id, FirstName, LastName, Title, City FROM dbo.Developers;
 	END
