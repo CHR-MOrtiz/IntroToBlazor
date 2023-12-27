@@ -4,5 +4,5 @@
 	[FirstName] NVARCHAR(50) NOT NULL,
 	[LastName] NVARCHAR(50) NOT NULL,
 	[Title] NVARCHAR(50) NULL,
-	[City] NVARCHAR(50) NULL
-)
+	[City] NVARCHAR(50) NULL,
+	[IsActive] bit NOT NULL)
