@@ -60,6 +60,7 @@
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\StoredProcedures" />
     <Folder Include="SQLQueries" />
+    <Folder Include="dbo\Functions" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Developers.sql" />
@@ -69,6 +70,9 @@
     <Build Include="dbo\StoredProcedures\Developers_Insert.sql" />
     <Build Include="dbo\StoredProcedures\Developers_Update.sql" />
     <Build Include="dbo\Tables\EmailAddress.sql" />
+    <Build Include="dbo\StoredProcedures\Developers_Activate_Deactivate.sql" />
+    <Build Include="dbo\StoredProcedures\Developers_UpdateEmail.sql" />
+    <Build Include="dbo\Functions\Validate_EmailPattern.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment1.sql" />
