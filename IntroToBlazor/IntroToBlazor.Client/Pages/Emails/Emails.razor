@@ -52,7 +52,6 @@ else
 }
 
 @code {
-
     //Fields
     private List<EmailRecord>? emails;
 
@@ -65,10 +64,7 @@ else
     public string? AlertMessage { get; set; }
 
     //Methods
-    protected override async Task OnInitializedAsync()
-    {
-        emails = await GetEmailsAsync();
-    }
+    protected override async Task OnInitializedAsync() => emails = await GetEmailsAsync();
 
     private async Task<List<EmailRecord>?> GetEmailsAsync()
     => await Http.GetFromJsonAsync<List<EmailRecord>>("/emails");
@@ -77,13 +73,13 @@ else
     {
         if (success)
         {
-            AlertMessage = $"Developer successfully updated!";
+            AlertMessage = $"Email successfully updated!";
             AlertType = AlertTypeEnum.success;
             emails = await GetEmailsAsync();
         }
         else
         {
-            AlertMessage = $"Developer failed to updated!";
+            AlertMessage = $"Email failed to update!";
             AlertType = AlertTypeEnum.danger;
         }
     }
