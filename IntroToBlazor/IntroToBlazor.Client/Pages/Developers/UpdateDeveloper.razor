@@ -63,9 +63,10 @@
 <BackLink BackUrl="@BackUrl" />
 
 @code {
+    //Fields
+    private bool updated;
 
-    private bool display, updated;
-
+    //Properties - Parameters
     [Parameter]
     public string? Id { get; set; }
 
@@ -80,6 +81,7 @@
 
     public DeveloperModel? Developer { get; set; }
 
+    //Methods
     protected override async Task OnInitializedAsync()
     {
         Developer = await Http.GetFromJsonAsync<DeveloperModel>($"/developers/{Id}");

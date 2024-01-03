@@ -14,16 +14,22 @@ public record class DeveloperModel(int? Id)
      * System.NotSupportedException: Deserialization of types without a parameterless constructor,
      * a singular parameterized constructor, or a parameterized constructor annotated with 'JsonConstructorAttribute' is not supported. */
     [JsonConstructor]
-    public DeveloperModel(int? Id, string firstName, string lastName, string title, string city) : this(Id)
+    public DeveloperModel(int? Id, string firstName, string lastName, string title, string city, bool isActive) : this(Id)
     {
         FirstName = firstName;
         LastName = lastName;
         Title = title;
         City = city;
+        IsActive = isActive;
     }
 
     public string? FirstName { get; set; }
+
     public string? LastName { get; set; }
+
     public string? Title { get; set; }
+
     public string? City { get; set; }
+
+    public bool IsActive { get; set; }
 };

@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[Developers_Activate_Deactivate_]
+﻿CREATE PROCEDURE [dbo].[Developers_Activate_Deactivate]
 	@Id INT
 AS
 	BEGIN

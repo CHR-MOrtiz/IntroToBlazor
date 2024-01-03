@@ -52,14 +52,32 @@ else
 
                                    }})" >Update</button>
                             </li>
-                            &nbsp;
-                            <li class="nav-item">
-                                <a class="btn btn-danger" @onclick="(() => { if (deleteDeveloperDialog is not null )
-                                {
-                                    deleteDeveloperDialog.DeveloperDeleteModal(developer);
 
-                                }})" >Delete</a>
-                            </li>
+                            @if (developer.IsActive)
+                            {
+                                <span>&nbsp;</span>
+                                <li class="nav-item">
+                                    <a class="btn btn-info" @onclick="(async () => {await ActivateDeactivateDevelopersAsync(developer.Id);})
+                                   ">Deactivate</a>
+                                </li>
+                            }
+                            &nbsp;
+                            @if (!developer.IsActive)
+                            {
+                                <li class="nav-item">
+                                    <a class="btn btn-info" @onclick="(async () => {await ActivateDeactivateDevelopersAsync(developer.Id);})
+                                           ">Activate</a>
+                                </li>
+                                <span>&nbsp;</span>
+                                <li class="nav-item">
+                                 <a class="btn btn-danger" @onclick="(() => { if (deleteDeveloperDialog is not null )
+                                 {
+                                     deleteDeveloperDialog.DeveloperDeleteModal(developer);
+
+                                 }})" >Delete</a>
+                                </li>
+                            }
+
                         </ul>
                     </td>
                 </tr>
@@ -69,11 +87,12 @@ else
 }
 
 @code{
-
+    //Fields
     private DeleteDeveloperModal? deleteDeveloperDialog;
 
     private List<DeveloperModel>? developers;
 
+    //Properties - Parameters
     [Parameter]
     public DeveloperModel? Developer { get; set; }
 
@@ -84,6 +103,7 @@ else
 
     public string? AlertMessage { get; set; }
 
+    //Methods
     protected override async Task OnInitializedAsync()
     {
         developers = await GetDevelopersAsync();
@@ -93,6 +113,16 @@ else
 
     private async Task<List<DeveloperModel>?> GetDevelopersAsync()
         => await Http.GetFromJsonAsync<List<DeveloperModel>>("/developers");
+
+    private async Task ActivateDeactivateDevelopersAsync(int? developerId)
+    {
+        var result = await Http.PostAsJsonAsync<int?>($"/developers-activation/{developerId}", developerId, CancellationToken.None);
+
+        if (result.IsSuccessStatusCode)
+        {
+            developers = await GetDevelopersAsync();
+        }
+    }
 
     protected async Task SuccessfulDeletionAsync() => developers = await GetDevelopersAsync();
 

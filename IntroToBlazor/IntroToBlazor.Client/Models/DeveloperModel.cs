@@ -18,5 +18,7 @@ public class DeveloperModel()
     public string? Title { get; set; }
 
     public string? City { get; set; }
+
+    public bool IsActive { get; set; }
 };
 

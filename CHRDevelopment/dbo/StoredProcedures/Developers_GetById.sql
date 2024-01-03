@@ -2,6 +2,6 @@
 	@Id INT
 AS
 	BEGIN
-		SELECT Id, FirstName, LastName, Title, City FROM dbo.Developers
+		SELECT Id, FirstName, LastName, Title, City, IsActive FROM dbo.Developers
 		WHERE Id =@Id;
 	END

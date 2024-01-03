@@ -15,6 +15,9 @@ public static class DevelopersEndpoints
         app.MapPut("/developers", UpdateDeveloper);
         //Delete developer
         app.MapDelete("/developers/{id}", DeleteDeveloper);
+        //Activate or deactivate developer
+        app.MapPost("/developers-activation/{id}", ActivateOrDeactiveDeveloper);
+
     }
 
     private static async Task<IResult> GetDevelopers(IDevelopmentData developers)
@@ -81,6 +84,24 @@ public static class DevelopersEndpoints
             developer.City ??= exists.City;
 
             await developers.UpdateDeveloper(developer);
+
+            return Results.Ok();
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
+    private static async Task<IResult> ActivateOrDeactiveDeveloper(int id, IDevelopmentData developers)
+    {
+        try
+        {
+            var exists = await developers.GetDeveloper(id);
+
+            if (exists is null) return Results.NotFound("Developer not found.");
+
+            await developers.ActivateDeactiveDeveloper(exists.Id);
 
             return Results.Ok();
         }
