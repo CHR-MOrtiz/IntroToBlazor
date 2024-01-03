@@ -1,0 +1,45 @@
+﻿@inject HttpClient Http
+@if (string.IsNullOrEmpty(Email!.Email))
+{
+    <a class="btn btn-success" @onclick="(async () => {await UpdateEmailAsync();})">Update</a>
+}
+
+
+@code {
+    //Fields
+    private DeveloperModel? developer;
+
+
+    //Properties - Parameters
+    [Parameter]
+    public EmailRecord? Email { get; set; }
+
+    public EmailRecord? EmailToUpdate { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> UpdateCallback { get; set; }
+
+    //Methods
+    private async Task UpdateEmailAsync()
+    {
+        var developer = await Http.GetFromJsonAsync<DeveloperModel>($"/developers/{Email!.DeveloperId}");
+
+        //Email.Email = string.Format(@$"{developer!.FirstName!.ToLower()}.{developer!.LastName!.ToLower()}@chrsolutions.com");
+
+        //var result = await Http.PutAsJsonAsync("/emails", Email, CancellationToken.None);
+
+        EmailToUpdate = new(Email.Id, Email.DeveloperId);
+        EmailToUpdate.Email = string.Format(@$"{developer!.FirstName!.ToLower()}.{developer!.LastName!.ToLower()}@chrsolutions.com");
+
+        var result = await Http.PutAsJsonAsync("/emails", EmailToUpdate, CancellationToken.None);
+
+        if (result.IsSuccessStatusCode)
+        {
+            await UpdateCallback.InvokeAsync(result.IsSuccessStatusCode);//event payload (bool)
+        }
+        else
+        {
+            await UpdateCallback.InvokeAsync(result.IsSuccessStatusCode);
+        }
+    }
+}

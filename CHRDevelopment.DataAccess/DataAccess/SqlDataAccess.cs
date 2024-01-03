@@ -40,7 +40,12 @@ public class SqlDataAccess(IConfiguration config) : ISqlDataAccess
     {
         using IDbConnection connection = new SqlConnection(_config.GetConnectionString(connectionId));
 
-        await connection.ExecuteAsync(storedProcedures, parameters, commandType: CommandType.StoredProcedure);
+        var result = await connection.ExecuteAsync(storedProcedures, parameters, commandType: CommandType.StoredProcedure);
+
+        if (result < 1)
+        {
+            throw new Exception();
+        }
     }
 }
 

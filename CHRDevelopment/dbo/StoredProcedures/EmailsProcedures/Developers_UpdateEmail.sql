@@ -14,4 +14,6 @@ AS
 		BEGIN
 			UPDATE dbo.EmailAddress SET Email = TRIM(@email) WHERE Id = @Id
 		END
+		ELSE
+		RETURN 0;
 	END

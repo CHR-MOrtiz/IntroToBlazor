@@ -1,0 +1,90 @@
+﻿@page "/emails"
+
+@inject HttpClient Http
+
+@rendermode InteractiveServer
+
+@attribute [StreamRendering]
+
+<h3>Emails</h3>
+
+<Alert AlertType="@AlertType" AlertMessage="@AlertMessage"/>
+
+@if(emails is null)
+{
+    <h3>Loading...</h3>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Developer ID</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var email in emails)
+            {
+                <tr>
+                    <td>
+                        @email.Id
+                    </td>
+                    <td>
+                        @if (string.IsNullOrEmpty(email.Email))
+                        {
+
+                            <i>Unassigned email!</i>
+                        }
+                        else
+                        {
+                            @email.Email
+                        }
+                    </td>
+                    <td>
+                        <UpdateEmail Email="@email"  UpdateCallback="OnEmailUpdateAsync" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    //Fields
+    private List<EmailRecord>? emails;
+
+    //Properties - Parameters
+    [Parameter]
+    public EmailRecord? Email { get; set; }
+
+    public AlertTypeEnum AlertType { get; set; }
+
+    public string? AlertMessage { get; set; }
+
+    //Methods
+    protected override async Task OnInitializedAsync()
+    {
+        emails = await GetEmailsAsync();
+    }
+
+    private async Task<List<EmailRecord>?> GetEmailsAsync()
+    => await Http.GetFromJsonAsync<List<EmailRecord>>("/emails");
+
+    private async Task OnEmailUpdateAsync(bool success)
+    {
+        if (success)
+        {
+            AlertMessage = $"Developer successfully updated!";
+            AlertType = AlertTypeEnum.success;
+            emails = await GetEmailsAsync();
+        }
+        else
+        {
+            AlertMessage = $"Developer failed to updated!";
+            AlertType = AlertTypeEnum.danger;
+        }
+    }
+}
