@@ -1,4 +1,5 @@
 ﻿@inject HttpClient Http
+
 @if (string.IsNullOrEmpty(Email!.Email))
 {
     <a class="btn btn-success" @onclick="(async () => {await UpdateEmailAsync();})">Update</a>
@@ -22,7 +23,7 @@
     {
         var developer = await Http.GetFromJsonAsync<DeveloperModel>($"/developers/{Email!.DeveloperId}");
 
-        EmailToUpdate = new(Email.Id, Email.DeveloperId);//new up EmailRecord
+        EmailToUpdate = new(Email.Id, developer!.Id);//new up EmailRecord
 
         EmailToUpdate.Email = string.Format(@$"{developer!.FirstName!.ToLower()}.{developer!.LastName!.ToLower()}@chrsolutions.com");
 

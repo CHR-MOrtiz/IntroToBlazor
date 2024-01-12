@@ -2,10 +2,10 @@
 
 namespace IntroToBlazor.Client.Models;
 
-public record class EmailRecord(int Id, int DeveloperId)
+public record class EmailRecord(int? Id, int? DeveloperId)
 {
     [JsonConstructor]
-    public EmailRecord(int Id, int DeveloperId, string email) : this(Id, DeveloperId)
+    public EmailRecord(int? Id, int? DeveloperId, string email) : this(Id, DeveloperId)
     {
         Email = email;
     }
